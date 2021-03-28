@@ -36,8 +36,6 @@ router.use((req, res, next) => {
 });
 
 const requireAuth = (req, res, next) => {
-  console.log("req: " + req.body)
-  console.log("res: " + res.body)
   if (req.user) {
       next();
   } else {
@@ -132,19 +130,8 @@ router.get('/protected', requireAuth, (req, res) => {
 
 //implementation for logout route
 router.get('/logout', requireAuth, (req,res) => {
-  //Delete tokens from array of tokens
   delete authTokens[req.cookies.AuthToken];
-  console.log(authTokens);
-  //cancel from array
-  /*
-  var filtered = users.filter(function(el) { 
-    return el.email !== user.email && el.password !== user.password
-  });  
-  users = filtered
-  */
-
-  //redirect to home
   res.redirect('/');
-})
+});
 
 module.exports = router;

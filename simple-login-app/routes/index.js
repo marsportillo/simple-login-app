@@ -14,7 +14,7 @@ const generateAuthToken = () => {
   return crypto.randomBytes(30).toString('hex');
 }
 
-const users = [
+var users = [
   // This user is added to the array to avoid creating a new user on each restart
   {
       firstName: 'John',
@@ -36,6 +36,8 @@ router.use((req, res, next) => {
 });
 
 const requireAuth = (req, res, next) => {
+  console.log("req: " + req.body)
+  console.log("res: " + res.body)
   if (req.user) {
       next();
   } else {
@@ -88,7 +90,6 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
   const { email, firstName, lastName, password, confirmPassword } = req.body;
-  console.log(req.body);
   // Check if the password and confirm password fields match
   if (password === confirmPassword) {
 
@@ -129,5 +130,21 @@ router.get('/protected', requireAuth, (req, res) => {
   res.render('protected');
 });
 
+//implementation for logout route
+router.get('/logout', requireAuth, (req,res) => {
+  //Delete tokens from array of tokens
+  delete authTokens[req.cookies.AuthToken];
+  console.log(authTokens);
+  //cancel from array
+  /*
+  var filtered = users.filter(function(el) { 
+    return el.email !== user.email && el.password !== user.password
+  });  
+  users = filtered
+  */
+
+  //redirect to home
+  res.redirect('/');
+})
 
 module.exports = router;
